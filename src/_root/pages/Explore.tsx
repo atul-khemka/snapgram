@@ -4,7 +4,7 @@ import SearchResults from "@/components/shared/SearchResults";
 import { Input } from "@/components/ui/input";
 import useDebounce from "@/hooks/useDebounce";
 import { useGetInfinitePosts, useSearchPosts } from "@/lib/react-query/query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useInView } from 'react-intersection-observer';
 
 const Explore = () => {
@@ -15,6 +15,11 @@ const Explore = () => {
   const debouncedValue = useDebounce(searchValue, 500);
 
   const { data: searchedPosts, isFetching } = useSearchPosts(debouncedValue);
+
+  useEffect(() => {
+    if(inView && !searchValue) fetchNextPage();
+
+  },[inView, searchValue]);
 
   if (!posts) {
     return (
